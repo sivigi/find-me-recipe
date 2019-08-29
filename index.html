@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,600,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Monoton&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/c40dcd02e1.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <link rel="stylesheet" href="css/style.css">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>find me recipe</title>
+<script src="js/app.js"></script>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+        <div class="logo"><span class="logo--name">find me</span><img src="images/logo.png" class="logo--img"><span class="logo--name">recipe</span></div> 
+        <div class="search"><input type="text" id="searchInput" placeholder="write what you want to make" class="search--input">
+            <button id="myBtn" class="search--btn btn" onclick="searchRecipes()"><i class="fas fa-search"></i><span class="display-pc">search</span></button>
+        </div>
+       <div class="header--favorites">
+           <i class="far fa-star"></i>
+           <ul class="header--favorites--list">
+
+            </ul></div>
+    </header>
+    <div class="search--result">
+         <p class="search--result--p"></p>
+    </div>
+        <div class="results--view">
+            <ul id="results" class="results--list">
+            <!-- <li class="result--list--item">
+                <a href="#">
+                    <img src="images/small-image.jpg" class="result--list--img">
+                    <h2 class="result--list--title">recipe title</h2>
+                </a>
+            </li>
+            <li class="result--list--item">
+                    <a href="#">
+                        <img src="images/small-image.jpg" class="result--list--img">
+                        <h2 class="result--list--title">recipe title</h2>
+                    </a>
+            </li>
+            <li class="result--list--item">
+                    <a href="#">
+                        <img src="images/small-image.jpg" class="result--list--img">
+                        <h2 class="result--list--title">recipe title</h2>
+                    </a>
+            </li> -->
+
+            </ul>
+        </div>
+        <div id="recipe">
+            <!-- <figure class="recipe--fig">
+                <img src="images/recipe-image.jpg" class="recipe--img">
+                <h1 class="recipe--title">recipe title</h1>
+            </figure>
+            <div class="recipe--content">
+            <p class="recipe--author">recipe author</p>
+            <ul class="recipe--ingeridients">
+                <li class="ingridients-item"><i class="fas fa-utensils"></i>item</li>
+                <li class="ingridients-item"><i class="fas fa-utensils"></i>item</li>
+                <li class="ingridients-item"><i class="fas fa-utensils"></i>item</li>
+                <li class="ingridients-item"><i class="fas fa-utensils"></i>item</li>
+            </ul>
+            <a href="#" class="recipe--link btn"><i class="fas fa-external-link-alt"></i>go to recipe</a>
+            <a href="#" class="recipe-add btn"><i class="fas fa-shopping-cart"></i>add to shopping list</a>
+        </div> -->
+        </div>
+        <div class="shop-view" id="shoppingList">
+            <h3 class="shop-title">my shopping list</h3>
+            <ul class="shoppingList--ul"></ul>
+        </div>
+</div>
+
+</body>
+</html>
