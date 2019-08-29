@@ -19,12 +19,18 @@ function searchRecipes(){
             success: function(result){
                 const recipeArray = result.recipes;
                 $('#searchInput').val('');
-                renderResults(recipeArray);
+                if(recipeArray.length > 0){
+                    console.log(recipeArray.length);
+                    renderResults(recipeArray);
+                }else{
+                    $('.search--result--p').text(`No results for "${userInput}", try different search word`);  
+                }
             }
         });  
+   }else{
+       alert('you need to fill the input to search for recipes');
    }
 };
-
 
 function renderResults(arr){
     $('#results').empty();
