@@ -20,7 +20,6 @@ function searchRecipes(){
                 const recipeArray = result.recipes;
                 $('#searchInput').val('');
                 if(recipeArray.length > 0){
-                    console.log(recipeArray.length);
                     renderResults(recipeArray);
                 }else{
                     $('.search--result--p').text(`No results for "${userInput}", try different search word`);  
@@ -153,7 +152,6 @@ function renderRecipe(recipe, id){
 
 function renderIng(arr) {
     let Ingeridients = "";
-    console.log(arr);
     for (i=0; i < arr.length; i++){
         const item = arr[i].replace(/\(|\)/g, ' ').toLowerCase();
         if(item.match(/[a-z]/i) ) {
