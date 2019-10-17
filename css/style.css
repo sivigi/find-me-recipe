@@ -42,8 +42,13 @@ a{
     grid-area: logo;
 }
 .logo--img{
-    max-width: 70px;
+    width: 70px;
+    height: 70px;
+    background-image:url('../images/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
 }
+
 .logo--name{
     font-family: 'Monoton', cursive;
     font-size: 1.8rem;
@@ -120,7 +125,6 @@ a{
 .header--favorites:hover .header--favorites--list{
     display: block;
 }
-
 .search--result{
     grid-area: search;
     background-color: #f5c164;
@@ -272,6 +276,15 @@ a{
 .shopping__item:hover .fa-times-circle{
     display: block;
 }
+#buttonAdd:disabled{
+    background-color: #5f5f5f;
+}
+.delete_btn{
+    background: #da1934; 
+    display: block;
+    margin: 10px auto;
+}
+
 @media screen and (max-width: 992px) {
     html{
         font-size:9px;
