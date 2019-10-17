@@ -10,7 +10,7 @@ function searchRecipes(){
    userInput = $('#searchInput').val(); 
    if (userInput){
         $.ajax({
-            url: `https://www.food2fork.com/api/search?key=${key1}&q=${userInput}`,
+            url: `https://www.food2fork.com/api/search?key=${key2}&q=${userInput}`,
             type: "GET",
             dataType: "json",
             error: function(jqXHR, textStatus, errorThrown) {
@@ -20,7 +20,6 @@ function searchRecipes(){
                 const recipeArray = result.recipes;
                 $('#searchInput').val('');
                 if(recipeArray.length > 0){
-                    console.log(recipeArray.length);
                     renderResults(recipeArray);
                 }else{
                     $('.search--result--p').text(`No results for "${userInput}", try different search word`);  
@@ -67,7 +66,7 @@ $(document).ready(function() {
                 const ids = id.split('-');
                 $(`#item-${ids[1]}`).addClass(' active--item');
                 $.ajax({
-                    url: `https://www.food2fork.com/api/get?key=${key1}&rId=${ids[1]}`, 
+                    url: `https://www.food2fork.com/api/get?key=${key2}&rId=${ids[1]}`, 
                     success: function(result){
                         const obj = jQuery.parseJSON( result );
                         const recipe = obj.recipe
@@ -153,7 +152,6 @@ function renderRecipe(recipe, id){
 
 function renderIng(arr) {
     let Ingeridients = "";
-    console.log(arr);
     for (i=0; i < arr.length; i++){
         const item = arr[i].replace(/\(|\)/g, ' ').toLowerCase();
         if(item.match(/[a-z]/i) ) {
@@ -180,13 +178,16 @@ function renderIng(arr) {
 }
 
 function addToShopping(arr) {
+    $('#buttonAdd').prop('disabled', true);
     let shoppingList = [];
     for (i=0; i < arr.length; i++){
         const item = arr[i].toLowerCase().replace(/\(|\)/g, ' ');
         if(item.match(/[a-z]/i) ){
             if(item.length < 60){
                 if (!(item.startsWith("for"))){
-                    shoppingList.push(item);    
+                    if (!(item.includes("salt and pepper"))){
+                        shoppingList.push(item); 
+                    }   
                 }
             }
         } 
@@ -196,14 +197,30 @@ function addToShopping(arr) {
 
 function renderShopping(arr){
     $(".shop-title").css("display", "block");
-    $.each(arr, function( index, item ) {
-        $('.shoppingList--ul').append(`<li class="shopping__item">${item}<i class="far fa-times-circle"></i></li>`);
-    });  
-    $(".fa-times-circle").on("click", function(e) {
-        const li = e.target.closest('.shopping__item');
-        li.remove();
-    });  
+        $.each(arr, function( index, item ) {
+            $('.shoppingList--ul').append(`<li class="shopping__item">${item}<i class="far fa-times-circle"></i></li>`);
+        });  
+        $(".fa-times-circle").on("click", function(e) {
+            const li = e.target.closest('.shopping__item');
+            li.remove();
+        });
+    
+         addDeleteBtn(arr);
+        
+
 }
+ function addDeleteBtn(arr){
+     if (arr.length > 0 && $('.delete_btn').length == 0 ){
+         $('#shoppingList').append(`<button class="delete_btn btn" onclick="deleteShoppingList()">clear list</button>`);
+     }
+
+ }
+ function deleteShoppingList() {
+     $('.shoppingList--ul').html('');
+     $('.delete_btn').remove();
+     $('#buttonAdd').prop('disabled', false);
+
+ }
 
 function addToFav(id, image, title){
     const favRecipe = {id,image,title};
@@ -213,11 +230,14 @@ function addToFav(id, image, title){
     showFavs(favRecipe);
 }
 
-function DeleteFromFav(id){
+function deleteFromFav(id){
     if (localStorage.getItem(`recipe-${id}`)) {
         localStorage.removeItem(`recipe-${id}`)
     }
-    removeFav(id)
+    if($(`#fav-${id}`).length){
+        const deleteItem = document.getElementById(`fav-${id}`);
+        deleteItem.parentNode.removeChild(deleteItem);
+    }
 }
 
 function showFavs(recipe){
@@ -228,12 +248,5 @@ function showFavs(recipe){
                     <h4 class="result--list--title">${recipe.title}</h4>
         </li>`;
         $('.header--favorites--list').append(html);
-    }
-}
-
-function removeFav(id){
-    if($(`#fav-${id}`).length){
-        const deleteItem = document.getElementById(`fav-${id}`);
-        deleteItem.parentNode.removeChild(deleteItem);
     }
 }
