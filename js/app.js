@@ -143,7 +143,7 @@ function renderRecipe(recipe, id){
             checkLikes();
         }else{
             $(`#like-${id} .fa-star`).removeClass('fas').addClass('far');
-            DeleteFromFav(id);
+            deleteFromFav(id);
             checkLikes();
         }
     });
