@@ -1,16 +1,15 @@
 const key1 ='65da4b50cc140eb4ebbc39b8a4cf4c89';
 const key2 ='d93f5458806aa79ab5607b733d2a8960';
 const key3 ='d8d8216665dedaf7eba2264a159c7152';
-const key4 = '48718368aa293138a9e54ff0f0ebc57b';
+
 let userInput;
 
-
-
+//בודק את אינפוט של המשתמש 
 function searchRecipes(){
    userInput = $('#searchInput').val(); 
    if (userInput){
         $.ajax({
-            url: `https://www.food2fork.com/api/search?key=${key2}&q=${userInput}`,
+            url: `https://www.food2fork.com/api/search?key=${key1}&q=${userInput}`,
             type: "GET",
             dataType: "json",
             error: function(jqXHR, textStatus, errorThrown) {
@@ -31,9 +30,11 @@ function searchRecipes(){
    }
 };
 
+//אם האינפוט תקין זה שולף מאייפיאיי 30 תוצאות ואני מציגה את זה בצורת רשימה באתר
 function renderResults(arr){
     $('#results').empty();
     $('.search--result--p').text(`you searched for "${userInput}" recipes`);
+    $('#recipe').empty();
     $.each(arr, function( index, value ) {
     $('#results').append(`<li class="result--list--item" id="item-${value.recipe_id}">
             <img src="${value.image_url}" class="result--list--img">
@@ -41,23 +42,11 @@ function renderResults(arr){
         </li>`);
     });
 };
-
-function checkLikes() { 
-    if(localStorage.length > 0){
-        if($('.header--favorites .fa-star').hasClass('far')){
-            $('.header--favorites .fa-star').removeClass('far').addClass('fas');
-        }
-    }else{
-        if($('.header--favorites .fa-star').hasClass('fas')){
-            $('.header--favorites .fa-star').removeClass('fas').addClass('far');
-        }
-    }   
- };
   
 $(document).ready(function() {
 
-    localStorage.clear();
-
+    localStorage.clear(); //מנקה את לוקל סטורג בטעינה של הדף
+    //כאשר משתמש לוחץ על מתכון מסוים יש קריאה נוספת של אייפיאיי לפי האיי די של המתכון
     $('#results, .header--favorites--list').on('click', function(e) {
             const li = e.target.closest('.result--list--item');
             if (li){
@@ -66,7 +55,7 @@ $(document).ready(function() {
                 const ids = id.split('-');
                 $(`#item-${ids[1]}`).addClass(' active--item');
                 $.ajax({
-                    url: `https://www.food2fork.com/api/get?key=${key2}&rId=${ids[1]}`, 
+                    url: `https://www.food2fork.com/api/get?key=${key1}&rId=${ids[1]}`, 
                     success: function(result){
                         const obj = jQuery.parseJSON( result );
                         const recipe = obj.recipe
@@ -79,17 +68,17 @@ $(document).ready(function() {
         });
 
         $('.search').keydown(function(e) {
-            var key = e.which;
+            let key = e.which;
             if (key == 13) {
                 $('#myBtn').click(); 
             }
         });
 
 });
-
+//טעינה של מתכון והצגה באתר
 function renderRecipe(recipe, id){
     const width = window.innerWidth;
-    if (width > 768){       
+    if (width > 768){       //תצוגה לדסקטופ
         $('#recipe').empty();
         $('#recipe').append(`
             <div class="recipe--view--pc">
@@ -114,7 +103,7 @@ function renderRecipe(recipe, id){
             addToShopping(recipe.ingredients);
         });
         
-} else {  
+} else { //תצוגה למובייל 
         $('.recipe--view--mobile').hide();
         $(`#item-${id}`).after(`
         <div class="recipe--view--mobile" id="recipe-${id}">
@@ -135,7 +124,7 @@ function renderRecipe(recipe, id){
         </div>`);
         $(`recipe-${id}`).show();        
     }
-    
+    // בדיקה האם המתכון במעודפים או לא
     $(`#like-${id}`).on('click', function() {
         if($(`#like-${id} .fa-star`).hasClass('far')){
             $(`#like-${id} .fa-star`).removeClass('far').addClass('fas');
@@ -149,7 +138,7 @@ function renderRecipe(recipe, id){
     });
 }
 
-
+// מעבר על רשימת מרכיבים והצגתם למשתמש בצורה ברורה
 function renderIng(arr) {
     let Ingeridients = "";
     for (i=0; i < arr.length; i++){
@@ -176,7 +165,7 @@ function renderIng(arr) {
     return Ingeridients;
 
 }
-
+//טעינת רשימת קניות
 function addToShopping(arr) {
     $('#buttonAdd').prop('disabled', true);
     let shoppingList = [];
@@ -195,33 +184,48 @@ function addToShopping(arr) {
     return renderShopping(shoppingList);
 }
 
+//הצגת רשימת קניות באתר
 function renderShopping(arr){
     $(".shop-title").css("display", "block");
         $.each(arr, function( index, item ) {
-            $('.shoppingList--ul').append(`<li class="shopping__item">${item}<i class="far fa-times-circle"></i></li>`);
+            $('.shoppingList--ul').append(`<li class="shopping__item">${item}<span class="close">x</span></li>`);
         });  
-        $(".fa-times-circle").on("click", function(e) {
+        $(".close").on("click", function(e) {
             const li = e.target.closest('.shopping__item');
             li.remove();
         });
     
          addDeleteBtn(arr);
-        
-
 }
+
+//מציג כפתור אשר מוחק את כל רשימת הקניות (מוצג רק אם יש ברשימה משהו)
  function addDeleteBtn(arr){
      if (arr.length > 0 && $('.delete_btn').length == 0 ){
          $('#shoppingList').append(`<button class="delete_btn btn" onclick="deleteShoppingList()">clear list</button>`);
      }
 
  }
+ // מוחק רשימת קניות
  function deleteShoppingList() {
      $('.shoppingList--ul').html('');
      $('.delete_btn').remove();
      $('#buttonAdd').prop('disabled', false);
 
  }
+//בודק אם יש מתכונים במועדפים ואם יש הכפתור משנה נראות
+ function checkLikes() { 
+    if(localStorage.length > 0){
+        if($('.header--favorites .fa-star').hasClass('far')){
+            $('.header--favorites .fa-star').removeClass('far').addClass('fas');
+        }
+    }else{
+        if($('.header--favorites .fa-star').hasClass('fas')){
+            $('.header--favorites .fa-star').removeClass('fas').addClass('far');
+        }
+    }   
+ };
 
+ //מוסיף מתכון לוקל סטורג
 function addToFav(id, image, title){
     const favRecipe = {id,image,title};
     if (localStorage.getItem(`recipe-${favRecipe.id}`) === null) {
@@ -230,6 +234,7 @@ function addToFav(id, image, title){
     showFavs(favRecipe);
 }
 
+//מוחק מתכון מלוקל סטורג' ומהמועדפים באתר
 function deleteFromFav(id){
     if (localStorage.getItem(`recipe-${id}`)) {
         localStorage.removeItem(`recipe-${id}`)
@@ -240,6 +245,7 @@ function deleteFromFav(id){
     }
 }
 
+//מוסיף מועדפים לאתר
 function showFavs(recipe){
       if(!($(`#fav-${recipe.id}`).length)){
         const html =`
